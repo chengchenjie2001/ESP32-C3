@@ -11,19 +11,19 @@ i2c=I2C(0)
 i2c.writeto(SHT4X_DEFAULT_ADDR, b'\x89')
 time.sleep(0.1)
 serial_number=i2c.readfrom(68,6)
-#print(serial_number)
+#print(serial_number)  # 获取传感器唯一值源数据
 ser1 = serial_number [0:2]
 ser1_crc = serial_number[2]
 ser2 = serial_number[3:5]
 ser2_crc = serial_number[5]
 serial = (ser1[0] << 24) + (ser1[1] << 16) + (ser2[0] << 8) + ser2[1]
-print(serial)
+print(serial)  # 得到解码后传感器唯一值
 i2c.writeto(SHT4X_DEFAULT_ADDR, b'\x94')
 time.sleep(0.001)
 i2c.writeto(SHT4X_DEFAULT_ADDR, b'\xFD')
 time.sleep(0.01)
 measurements=i2c.readfrom(68,6)
-#print(cs2)
+#print(measurements)  # 获取温湿度源数据
 temp_data = measurements[0:2]
 temp_crc = measurements[2]
 humidity_data = measurements[3:5]
@@ -33,5 +33,5 @@ temperature = -45.0 + 175.0 * temperature / 65535.0
 humidity = struct.unpack_from(">H", humidity_data)[0]
 humidity = -6.0 + 125.0 * humidity / 65535.0
 humidity = max(min(humidity, 100), 0)
-print(temperature,humidity)
+print(temperature,humidity)  # 得到解码后的温度湿度
 
